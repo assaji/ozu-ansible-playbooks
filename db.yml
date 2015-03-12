@@ -1,0 +1,12 @@
+---
+- hosts: all
+  sudo: yes
+
+  tasks:
+   - name: MariaDB repo
+     copy: src=files/MariaDB.repo dest=/etc/yum.repos.d/
+     when: ansible_os_family == "RedHat"
+
+   - name: MariaDB Install
+     yum:  name=mariadb-server state=latest
+     when: ansible_os_family == "RedHat"
