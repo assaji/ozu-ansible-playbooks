@@ -1,0 +1,9 @@
+---
+- hosts: fedora21
+  sudo: yes
+  remote_user: ozu
+  vars:
+    username: pinoko
+  tasks:
+    - name: useradd 
+      user: name={{ username }} group=wheel  shell=/bin/bash

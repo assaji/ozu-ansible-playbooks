@@ -1,0 +1,22 @@
+---
+- hosts: all
+  sudo: yes
+  remote_user: belleseba
+  vars:
+    username: pinoko
+
+  tasks:
+    - name: User Add(Debian)
+      user: name={{ username }} group=admin shell=/bin/bash
+      when: ansible_os_family == "Debian"
+
+    - name: User Add(Redhat)
+      user: name={{ username }} group=wheel shell=/bin/bash
+      when: ansible_os_family == "RedHat"
+
+    - name: User PublicKey Add
+      authorized_key: user={{ username }} 
+                      key="{{ lookup('file', '~/.ssh/pinoko_rsa.pub') }}"
+
+    #- name: User Publickey add
+    #  authorized_key: user={{ username }} key=keys/pinoko_rsa.pub

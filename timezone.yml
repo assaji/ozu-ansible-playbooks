@@ -1,0 +1,25 @@
+---
+- hosts: all
+  sudo: yes
+  remote_user: belleseba
+  vars:
+  tasks:
+    - name: Timezone(Debian)
+      file: src=/usr/share/zoneinfo/Japan dest=/etc/localtime owner=root group=root state=link
+      when: ansible_os_family == "Debian"
+
+    - name: Timezone(CentOS6)
+      copy: src=Tokyo
+      command: cp -p /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+      when: ansible_distribution_major_version == "6"
+
+    - name: Timezone-Clock
+      replace:
+       dest=/etc/sysconfig/clock
+       regexp='UTC'
+       replace="Asia/Tokyo"
+       when: ansible_distribution_major_version == "6"
+
+    - name: Timezone(CentOS7)
+      command: /bin/timedatectl set-timezone Asia/Tokyo
+      when: ansible_distribution_major_version == "7"

@@ -1,9 +1,29 @@
 ---
-- hosts: fedora21
+- hosts: all
   sudo: yes
-  remote_user: ozu
+  #remote_user: belleseba
   vars:
-    username: pinoko
+
   tasks:
-    - name: useradd 
-      user: name={{ username }} group=wheel  shell=/bin/bash
+    - name: Apache Install(Debian)
+      apt: name=apache2 state=latest
+      when: ansible_os_family == "Debian"
+
+    - name: Apache Install(Redhat)
+      yum: name=httpd state=latest
+      when: ansible_os_family == "RedHat"
+
+    - name: Apache config copy
+      copy: src=files/httpd.conf dest=/etc/httpd/conf/httpd.conf
+      notify: Apache restart
+      when: ansible_os_family == "RedHat"
+
+    - name: Apache owner change
+      file: dest=/etc/httpd/conf/httpd.conf owner=root state=file
+      notify: Apache restart
+      when: ansible_os_family == "RedHat"
+
+  handlers:
+    - name: Apache restart
+      service: name=httpd state=restarted
+      when: ansible_os_family == "RedHat"
