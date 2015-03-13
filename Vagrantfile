@@ -17,7 +17,7 @@ Vagrant.configure(2) do |config|
  
   config.vm.define :db01 do |db01|
    db01.vm.hostname = "db01"
-   db01.vm.network "public_network", ip:"192.168.11.85", :bridge => "en0: Ethernet" 
+   db01.vm.network "public_network", ip:"192.168.11.83", :bridge => "en0: Ethernet" 
   end
 
   config.vm.provider "virtualbox" do |vb|
